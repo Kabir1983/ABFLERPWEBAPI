@@ -1,0 +1,165 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Collections;
+
+// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+
+namespace ABFLERPWEBAPI.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ACCZeroBalanceReport : ControllerBase
+    {
+
+        private readonly AkijSCMSDBContext _dbContext;
+        public ACCZeroBalanceReport(AkijSCMSDBContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
+
+        // GET: api/<DMSFactoryProductionBarcodeController>
+        [HttpGet]
+        public IEnumerable<string> Get()
+        {
+            return new string[] { "value1", "value2" };
+
+        }
+
+        // GET api/<DMSFactoryProductionBarcodeController>/5
+        [HttpGet("{id}")]
+        public string Get(int id)
+        {
+            return "value";
+        }
+
+        // POST api/<DMSFactoryProductionBarcodeController>
+        [HttpGet("GetSoleDepotWithChildDepotZeroBalance")]
+        public async Task<ActionResult<List<ACCSPGETTopSheetProductStockForDepotWithChildDepot>>> GetSoleDepotWithChildDepotZeroBalanceReport(int depotID, string date)
+        {
+            var zeroBalanceReportData = await _dbContext.ACCSPGETTopSheetProductStockForDepotWithChildDepots.FromSqlRaw($"ACCSPGETTopSheetProductStockForDepotWithChildDepot @DepoID= {depotID}, @DateFrom='{date}', @DateTo='{date}'").ToListAsync();
+            return Ok(zeroBalanceReportData);
+        }
+
+
+        [HttpGet("GetSoleDepotWithChildDepotZeroBalanceExpense")]
+        public async Task<ActionResult<List<ACCSPGETTopSheetProductExpenseForDepotWithChildDepot>>> GetSoleDepotWithChildDepotZeroBalanceReportExpense(int depotID, string date)
+        {
+
+            var zeroBalanceReportData = await _dbContext.ACCSPGETTopSheetProductExpenseForDepotWithChildDepots.FromSqlRaw($"ACCSPGETTopSheetProductExpenseForDepotWithChildDepot @DepoParam= {depotID}, @DateFrom='{date}', @DateTo='{date}'").ToListAsync();
+            return Ok(zeroBalanceReportData);
+        }
+
+        [HttpGet("CheckZeroBalanceReportSaveDataExist")]
+        public bool CheckZeroBalanceReportSaveDataExist(int depotID, string date)
+        {
+            bool isExist = false;
+            DateTime Date = Convert.ToDateTime(date);
+            var totalRecordCound = _dbContext.DMSSDWCDZeroBalanceReportStockSides.Where(m => m.SoleDepotID == depotID && m.Date == Date).ToList().Count();
+            if (totalRecordCound > 0)
+            {
+                isExist = true;
+            }
+            return isExist;
+        }
+
+
+        [HttpGet("GetZeroBalanceReportItem")]
+        public async Task<ActionResult<List<AccZeroBalanceReportItem>>> GetZeroBalanceReportItem(short tranType, short reportType, string itemName)
+        {
+            var zeroBalanceReportData = await _dbContext.AccZeroBalanceReportItems.Where(m=>m.TranType==tranType && m.ReportType==reportType && m.ItemName.Contains(itemName)).ToListAsync();
+            return Ok(zeroBalanceReportData);
+        }
+
+        [HttpPost]
+        [Route("InsertSDWCDZeroBalanceReport")]
+        public Response PostSDWCDZeroReport(ArrayList arrayList)
+        {
+
+            List<Models.DMSSDWCDZeroBalanceReportStockSide> objDMSSDWCDZeroBalanceReportStockSideList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Models.DMSSDWCDZeroBalanceReportStockSide>>(arrayList[0].ToString());
+            List<Models.DMSSDWCDZeroBalanceReportExpenseSide> objDMSSDWCDZeroBalanceReportExpenseSideList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Models.DMSSDWCDZeroBalanceReportExpenseSide>>(arrayList[1].ToString());
+
+            Response response = new Response();
+            long maxID = _dbContext.DMSSDWCDZeroBalanceReportStockSides.Max(m => (long?)m.ID) ?? 0;
+
+            long maxExpID = _dbContext.DMS_SDWCDZeroBalanceReportExpenseSides.Max(m => (long?)m.ID) ?? 0;
+
+            if (objDMSSDWCDZeroBalanceReportStockSideList != null)
+            {
+                foreach (var objDMSSDWCDZeroBalanceReportStockSide in objDMSSDWCDZeroBalanceReportStockSideList)
+                {
+                    objDMSSDWCDZeroBalanceReportStockSide.ID = ++maxID;
+                    objDMSSDWCDZeroBalanceReportStockSide.LastUpdate = DateTime.Now;
+                    objDMSSDWCDZeroBalanceReportStockSide.Remarks = "";
+                    _dbContext.DMSSDWCDZeroBalanceReportStockSides.Add(objDMSSDWCDZeroBalanceReportStockSide);
+                }
+            }
+
+            if (objDMSSDWCDZeroBalanceReportExpenseSideList != null)
+            {
+                foreach (var objDMSSDWCDZeroBalanceReportExpenseSide in objDMSSDWCDZeroBalanceReportExpenseSideList)
+                {
+                    objDMSSDWCDZeroBalanceReportExpenseSide.ID = ++maxExpID;
+                    objDMSSDWCDZeroBalanceReportExpenseSide.LastUpdate = DateTime.Now;
+                    objDMSSDWCDZeroBalanceReportExpenseSide.Remarks = "";
+                    _dbContext.DMS_SDWCDZeroBalanceReportExpenseSides.Add(objDMSSDWCDZeroBalanceReportExpenseSide);
+                }
+            }
+
+            if (_dbContext.SaveChanges() > 0)
+            {
+                response.StatusCode = 200;
+                response.StatusMessage = "Save Success";
+            }
+            else
+            {
+                response.StatusCode = 100;
+                response.StatusMessage = "Failed";
+            }
+            return response;
+        }
+
+        //[HttpPost]
+        //[Route("InsertSDWCDZeroBalanceExpenseSide")]
+        //public Response PostSDWCDZeroBalanceExpenseSide(List<Models.DMSSDWCDZeroBalanceReportExpenseSide> objDMSSDWCDZeroBalanceReportExpenseSideList)
+        //{
+
+        //    Response response = new Response();
+        //    long maxID = _dbContext.DMS_SDWCDZeroBalanceReportExpenseSides.Max(m => (long?)m.ID) ?? 0;
+
+        //    if (objDMSSDWCDZeroBalanceReportExpenseSideList != null)
+        //    {
+        //        foreach (var objDMSSDWCDZeroBalanceReportExpenseSide in objDMSSDWCDZeroBalanceReportExpenseSideList)
+        //        {
+        //            objDMSSDWCDZeroBalanceReportExpenseSide.ID = ++maxID;
+        //            objDMSSDWCDZeroBalanceReportExpenseSide.LastUpdate = DateTime.Now;
+        //            objDMSSDWCDZeroBalanceReportExpenseSide.Remarks = "";
+        //            _dbContext.DMS_SDWCDZeroBalanceReportExpenseSides.Add(objDMSSDWCDZeroBalanceReportExpenseSide);
+        //        }
+        //    }
+        //    if (_dbContext.SaveChanges() > 0)
+        //    {
+        //        response.StatusCode = 200;
+        //        response.StatusMessage = "Save Success";
+        //    }
+        //    else
+        //    {
+        //        response.StatusCode = 100;
+        //        response.StatusMessage = "Failed";
+        //    }
+        //    return response;
+        //}
+
+        // PUT api/<DMSFactoryProductionBarcodeController>/5
+        [HttpPut("{id}")]
+        public void Put(int id, [FromBody] string value)
+        {
+        }
+
+        // DELETE api/<DMSFactoryProductionBarcodeController>/5
+        [HttpDelete("{id}")]
+        public void Delete(int id)
+        {
+        }
+    }
+}

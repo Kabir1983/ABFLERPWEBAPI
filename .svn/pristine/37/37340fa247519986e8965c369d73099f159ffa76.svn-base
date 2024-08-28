@@ -1,0 +1,23 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace ABFLERPWEBAPI.Models
+{
+    public partial class DmsDepoToDepoChallanItem
+    {
+        public long ChallanItemId { get; set; }
+        public long ChallanId { get; set; }
+        public long Dsid { get; set; }
+        public short ProductId { get; set; }
+        public long Qty { get; set; }
+        public int InsertUserId { get; set; }
+        public long? RequisitionItemId { get; set; }
+        public DateTime LastUpdate { get; set; }
+        public bool IsReceive { get; set; }
+        public byte? Status { get; set; }
+
+        public virtual DmsDepoToDepoChallan Challan { get; set; } = null!;
+        public virtual DmsDepoStock Ds { get; set; } = null!;
+        public virtual DmsDmreceivedItemFromDepo? DmsDmreceivedItemFromDepo { get; set; }
+    }
+}
