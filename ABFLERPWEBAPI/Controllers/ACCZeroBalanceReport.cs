@@ -179,7 +179,7 @@ namespace ABFLERPWEBAPI.Controllers
         {
             Response response = new Response();
 
-            var sdWCDSalesDataList = _dbContext.DMSSDWCDZeroBalanceReportStockSides.Where(m => m.Date == Convert.ToDateTime(Date) && m.SoleDepotID == DepoID && m.TranType == 3 && m.ApprovedByDO.ToString().Length > 0);
+            var sdWCDSalesDataList = _dbContext.DMSSDWCDZeroBalanceReportStockSides.Where(m => m.Date == Convert.ToDateTime(Date) && m.SoleDepotID == DepoID && m.TranType == 3).ToList();
 
             if (sdWCDSalesDataList != null)
             {
