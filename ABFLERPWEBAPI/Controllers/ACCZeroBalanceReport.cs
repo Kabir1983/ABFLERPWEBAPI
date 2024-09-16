@@ -245,7 +245,7 @@ namespace ABFLERPWEBAPI.Controllers
             BO.SearchParameter objSP = objSPList[0];
 
             var sdWCDSalesDataList = _dbContext.DMSSDWCDZeroBalanceReportStockSides.Where(m => m.Date == Convert.ToDateTime(objSP.Date) && m.SoleDepotID == objSP.DepoID && m.TranType == 3).ToList();
-
+                
             if (sdWCDSalesDataList != null)
             {
                 foreach (var objDMSSDWCDZeroBalanceReportExpenseSide in sdWCDSalesDataList)
