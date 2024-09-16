@@ -40,6 +40,14 @@ namespace ABFLERPWEBAPI.Controllers
             return Ok(zeroBalanceReportData);
         }
 
+        //[HttpGet("GetSoleDepotWithChildDepotZeroBalance")]
+        //public async Task<ActionResult<List<ACCSPGETTopSheetProductStockForDepotWithChildDepot>>> GetSoleDepotWithChildDepotZeroBalanceReport(int depotID, string date)
+        //{
+        //    var zeroBalanceReportData = await _dbContext.ACCSPGETTopSheetProductStockForDepotWithChildDepots.FromSqlRaw($"
+        //        @DepoID= {depotID}, @DateFrom='{date}', @DateTo='{date}'").ToListAsync();
+        //    return Ok(zeroBalanceReportData);
+        //}
+
         [HttpGet("GetDateWiseSDWithCDepotZeroBalanceStockPart")]
         public async Task<ActionResult<List<ACCSPGETTopSheetProductStockForDepotWithChildDepot>>> GetDateWiseSDWithCDepotZeroBalanceStockPart(int depotID, string dateFrom, string dateTo)
         {
@@ -122,7 +130,8 @@ namespace ABFLERPWEBAPI.Controllers
         {
             bool isExist = false;
             DateTime Date = Convert.ToDateTime(date);
-            var totalRecordCound = _dbContext.DMSSDWCDZeroBalanceReportStockSides.Where(m => m.SoleDepotID == depotID && m.Date == Date && m.TranType == 3 && m.ApprovedByHO == hoID).ToList().Count();
+            var productIds = new List<int> { 1, 2, 3, 5, 7, 8, 17, 19 };
+            var totalRecordCound = _dbContext.DMSSDWCDZeroBalanceReportStockSides.Where(m => m.SoleDepotID == depotID && m.Date == Date && m.TranType == 3 && m.ApprovedByHO == hoID && productIds.Contains(m.ProductID)).ToList().Count();
             if (totalRecordCound > 0)
             {
                 isExist = true;
@@ -135,7 +144,36 @@ namespace ABFLERPWEBAPI.Controllers
         {
             bool isExist = false;
             DateTime Date = Convert.ToDateTime(date);
-            var totalRecordCound = _dbContext.DMSSDWCDZeroBalanceReportStockSides.Where(m => m.SoleDepotID == depotID && m.Date == Date && m.TranType == 3 && m.ApprovedByDO == doID).ToList().Count();
+            var productIds = new List<int> { 1, 2, 3, 5, 7, 8, 17, 19 };
+            var totalRecordCound = _dbContext.DMSSDWCDZeroBalanceReportStockSides.Where(m => m.SoleDepotID == depotID && m.Date == Date && m.TranType == 3 && m.ApprovedByDO == doID && productIds.Contains(m.ProductID)).ToList().Count();
+            if (totalRecordCound > 0)
+            {
+                isExist = true;
+            }
+            return isExist;
+        }
+
+        [HttpGet("CheckHOApprovalATCLDataExist")]
+        public bool CheckHOApprovalATCLDataExist(int hoID, int depotID, string date)
+        {
+            bool isExist = false;
+            DateTime Date = Convert.ToDateTime(date);
+            var productIds = new List<int> { 14, 15, 16, 18, 20, 21 };
+            var totalRecordCound = _dbContext.DMSSDWCDZeroBalanceReportStockSides.Where(m => m.SoleDepotID == depotID && m.Date == Date && m.TranType == 3 && m.ApprovedByHO == hoID && productIds.Contains(m.ProductID)).ToList().Count();
+            if (totalRecordCound > 0)
+            {
+                isExist = true;
+            }
+            return isExist;
+        }
+
+        [HttpGet("CheckDOApprovalATCLDataExist")]
+        public bool CheckDOApprovalATCLDataExist(int doID, int depotID, string date)
+        {
+            bool isExist = false;
+            DateTime Date = Convert.ToDateTime(date);
+            var productIds = new List<int> { 14, 15, 16, 18, 20, 21 };
+            var totalRecordCound = _dbContext.DMSSDWCDZeroBalanceReportStockSides.Where(m => m.SoleDepotID == depotID && m.Date == Date && m.TranType == 3 && m.ApprovedByDO == doID && productIds.Contains(m.ProductID)).ToList().Count();
             if (totalRecordCound > 0)
             {
                 isExist = true;
@@ -210,7 +248,9 @@ namespace ABFLERPWEBAPI.Controllers
 
             BO.SearchParameter objSP = objSPList[0];
 
-            var sdWCDSalesDataList = _dbContext.DMSSDWCDZeroBalanceReportStockSides.Where(m => m.Date == Convert.ToDateTime(objSP.Date) && m.SoleDepotID == objSP.DepoID && m.TranType == 3).ToList();
+            var productIds = new List<int> { 1, 2, 3, 5, 7, 8, 17, 19 };
+
+            var sdWCDSalesDataList = _dbContext.DMSSDWCDZeroBalanceReportStockSides.Where(m => m.Date == Convert.ToDateTime(objSP.Date) && m.SoleDepotID == objSP.DepoID && m.TranType == 3 && productIds.Contains(m.ProductID)).ToList();
 
             if (sdWCDSalesDataList != null)
             {
@@ -244,7 +284,78 @@ namespace ABFLERPWEBAPI.Controllers
 
             BO.SearchParameter objSP = objSPList[0];
 
-            var sdWCDSalesDataList = _dbContext.DMSSDWCDZeroBalanceReportStockSides.Where(m => m.Date == Convert.ToDateTime(objSP.Date) && m.SoleDepotID == objSP.DepoID && m.TranType == 3).ToList();
+            var productIds = new List<int> { 1, 2, 3, 5, 7, 8, 17, 19 };
+
+            var sdWCDSalesDataList = _dbContext.DMSSDWCDZeroBalanceReportStockSides.Where(m => m.Date == Convert.ToDateTime(objSP.Date) && m.SoleDepotID == objSP.DepoID && m.TranType == 3 && productIds.Contains(m.ProductID)).ToList();
+
+            if (sdWCDSalesDataList != null)
+            {
+                foreach (var objDMSSDWCDZeroBalanceReportExpenseSide in sdWCDSalesDataList)
+                {
+                    objDMSSDWCDZeroBalanceReportExpenseSide.ApprovedByHO = objSP.HOID;
+                    _dbContext.DMSSDWCDZeroBalanceReportStockSides.Update(objDMSSDWCDZeroBalanceReportExpenseSide);
+                }
+            }
+            if (_dbContext.SaveChanges() > 0)
+            {
+                response.StatusCode = 200;
+                response.StatusMessage = "Save Success";
+            }
+            else
+            {
+                response.StatusCode = 100;
+                response.StatusMessage = "Failed";
+            }
+            return response;
+        }
+
+
+        [HttpPost]
+        [Route("UpdateSDWCDZeroBalanceATCLSalesDOApproval")]
+        public Response UpdateSDWCDZeroBalanceATCLSalesDOApproval(ArrayList arrayList)
+        {
+            Response response = new Response();
+
+            List<BO.SearchParameter> objSPList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<BO.SearchParameter>>(arrayList[0].ToString());
+
+            BO.SearchParameter objSP = objSPList[0];
+            var productIds = new List<int> { 14, 15, 16, 18, 20, 21 };
+
+            var sdWCDSalesDataList = _dbContext.DMSSDWCDZeroBalanceReportStockSides.Where(m => m.Date == Convert.ToDateTime(objSP.Date) && m.SoleDepotID == objSP.DepoID && m.TranType == 3 && productIds.Contains(m.ProductID)).ToList();
+
+            if (sdWCDSalesDataList != null)
+            {
+                foreach (var objDMSSDWCDZeroBalanceReportExpenseSide in sdWCDSalesDataList)
+                {
+                    objDMSSDWCDZeroBalanceReportExpenseSide.ApprovedByDO = objSP.DOID;
+                    _dbContext.DMSSDWCDZeroBalanceReportStockSides.Update(objDMSSDWCDZeroBalanceReportExpenseSide);
+                }
+            }
+            if (_dbContext.SaveChanges() > 0)
+            {
+                response.StatusCode = 200;
+                response.StatusMessage = "Save Success";
+            }
+            else
+            {
+                response.StatusCode = 100;
+                response.StatusMessage = "Failed";
+            }
+            return response;
+        }
+
+
+        [HttpPost]
+        [Route("UpdateSDWCDZeroBalanceATCLSalesHOApproval")]
+        public Response UpdateSDWCDZeroBalanceATCLSalesHOApproval(ArrayList arrayList)
+        {
+            Response response = new Response();
+
+            List<BO.SearchParameter> objSPList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<BO.SearchParameter>>(arrayList[0].ToString());
+
+            BO.SearchParameter objSP = objSPList[0];
+            var productIds = new List<int> { 14, 15, 16, 18, 20, 21 };
+            var sdWCDSalesDataList = _dbContext.DMSSDWCDZeroBalanceReportStockSides.Where(m => m.Date == Convert.ToDateTime(objSP.Date) && m.SoleDepotID == objSP.DepoID && m.TranType == 3 && productIds.Contains(m.ProductID)).ToList();
 
             if (sdWCDSalesDataList != null)
             {
