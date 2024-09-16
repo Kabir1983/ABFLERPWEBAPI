@@ -69,49 +69,49 @@ namespace ABFLERPWEBAPI.Controllers
                     return "";
 
                 // Nominatim reverse geocoding API URL
-                string url = $"https://nominatim.openstreetmap.org/reverse?lat={latitude}&lon={longitude}&format=json";
+                //string url = $"https://nominatim.openstreetmap.org/reverse?lat={latitude}&lon={longitude}&format=json";
 
-                // Send a GET request to the API
-                var response = await _httpClient.GetAsync(url);
+                //// Send a GET request to the API
+                //var response = await _httpClient.GetAsync(url);
 
-                // Check if the request was successful
-                response.EnsureSuccessStatusCode();
+                //// Check if the request was successful
+                //response.EnsureSuccessStatusCode();
 
-                // Read the content as a string
-                var jsonResponse = await response.Content.ReadAsStringAsync();
+                //// Read the content as a string
+                //var jsonResponse = await response.Content.ReadAsStringAsync();
 
-                // Parse the JSON response
-                JObject jsonObject = JObject.Parse(jsonResponse);
+                //// Parse the JSON response
+                ////JObject jsonObject = JObject.Parse(jsonResponse);
 
-                // Extract the address from the response
-                locationName = jsonObject["display_name"]?.ToString();
+                //// Extract the address from the response
+                //locationName = jsonObject["display_name"]?.ToString();
 
-                //string url = string.Format("https://maps.googleapis.com/maps/api/geocode/xml?latlng={0},{1}&sensor=false&key=AIzaSyBr0M-_4t6tGSVb87JidANh-ZfOQCX6u9k", latitude, longitude);
+                string url = string.Format("https://maps.googleapis.com/maps/api/geocode/xml?latlng={0},{1}&sensor=false&key=AIzaSyBr0M-_4t6tGSVb87JidANh-ZfOQCX6u9k", latitude, longitude);
 
 
-                //WebRequest request = WebRequest.Create(url);
+                WebRequest request = WebRequest.Create(url);
 
-                //using (WebResponse response = (HttpWebResponse)request.GetResponse())
-                //{
-                //    using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
-                //    {
-                //        DataSet dsResult = new DataSet();
-                //        dsResult.ReadXml(reader);
-                //        try
-                //        {
-                //            foreach (DataRow row in dsResult.Tables["result"].Rows)
-                //            {
-                //                locationName = row["formatted_address"].ToString();
-                //            }
-                //            locationName = dsResult.Tables["result"].Rows[0]["formatted_address"].ToString();
-                //        }
-                //        catch (Exception)
-                //        {
+                using (WebResponse response = (HttpWebResponse)request.GetResponse())
+                {
+                    using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
+                    {
+                        DataSet dsResult = new DataSet();
+                        dsResult.ReadXml(reader);
+                        try
+                        {
+                            foreach (DataRow row in dsResult.Tables["result"].Rows)
+                            {
+                                locationName = row["formatted_address"].ToString();
+                            }
+                            locationName = dsResult.Tables["result"].Rows[0]["formatted_address"].ToString();
+                        }
+                        catch (Exception)
+                        {
 
-                //        }
+                        }
 
-                //    }
-                //}
+                    }
+                }
             }
             catch (Exception ex)
             {
