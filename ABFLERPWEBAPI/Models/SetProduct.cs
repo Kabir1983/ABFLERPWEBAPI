@@ -34,7 +34,7 @@ namespace ABFLERPWEBAPI.Models
             FacWorkerWages = new HashSet<FacWorkerWage>();
             OocOutletSaleTargetPlanItems = new HashSet<OocOutletSaleTargetPlanItem>();
             SetProductPrices = new HashSet<SetProductPrice>();
-            SetProductWiseIncentives = new HashSet<SetProductWiseIncentive>();
+            SetProductWiseIncentives = new HashSet<SetProductPromotionPolicy>();
         }
 
         public short ProductId { get; set; }
@@ -78,6 +78,6 @@ namespace ABFLERPWEBAPI.Models
         public virtual ICollection<FacWorkerWage> FacWorkerWages { get; set; }
         public virtual ICollection<OocOutletSaleTargetPlanItem> OocOutletSaleTargetPlanItems { get; set; }
         public virtual ICollection<SetProductPrice> SetProductPrices { get; set; }
-        public virtual ICollection<SetProductWiseIncentive> SetProductWiseIncentives { get; set; }
+        public virtual ICollection<SetProductPromotionPolicy> SetProductWiseIncentives { get; set; }
     }
 }

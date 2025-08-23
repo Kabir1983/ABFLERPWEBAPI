@@ -1,0 +1,26 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace ABFLERPWEBAPI.Models
+{
+    public partial class DmsRouteWiseSalesTargetInc
+    {
+        public long ID { get; set; }
+        public Int16 STTID { get; set; }
+        public Int16 STGID { get; set; }
+        public int? SRID { get; set; }
+        public int RouteID { get; set; }
+        public decimal TotalSales { get; set; }
+        public decimal AverageSales { get; set; }
+        public decimal TotalMemo { get; set; }
+        public decimal AverageMemo { get; set; }
+        public decimal SalesTarget { get; set; }
+        public decimal MemoTarget { get; set; }
+        public int Month { get; set; }
+        public int Year { get; set; }
+        public DateTime CreateDate { get; set; }
+        public DateTime LastUpdate { get; set; }
+        public string? Category { get; set; }
+        public int? STPID { get; set; } 
+    }
+}

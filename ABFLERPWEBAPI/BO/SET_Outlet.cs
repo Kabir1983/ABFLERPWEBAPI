@@ -102,6 +102,7 @@
         public int? ClusterID { get; set; }
         public int AreaID { get; set; }
         public string DepoName { get; set; }
+        public string? BkashNo { get; set; }
         public string RegionName { get; set; }
         public string AreaName { get; set; }
         public string TerritoryName { get; set; }
@@ -122,8 +123,11 @@
         public string DivisionName { get; set; }
         public int ThanaId { get; set; }
         public int UnionId { get; set; }
+        public Int16? OutletPartnerID { get; set; }
         public byte? OutletTypeID { get; set; }
+        public byte? MFSTypeID { get; set; }
+        public byte? CigOutletTypeID { get; set; }
         public string OutletTypeName { get; set; }
-
+        public string? GPSAddress { get; set; }
     }
 }

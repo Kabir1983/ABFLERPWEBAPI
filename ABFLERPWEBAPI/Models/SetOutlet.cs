@@ -27,7 +27,14 @@ namespace ABFLERPWEBAPI.Models
         public int? UnionId { get; set; }
         public string? VillageName { get; set; }
         public string? MarketName { get; set; }
+        public string? BkashNo { get; set; }
         public byte? OutletTypeID { get; set; }
+        public byte? CigOutletTypeID { get; set; }
+        public byte? MFSTypeID { get; set; }
+        public Int16? OutletPartnerID { get; set; }
+        public decimal? Latitude { get; set; }
+        public decimal? Longitude { get; set; }
+        public string? GPSAddress { get; set; }
 
         public virtual SetCluster? Cluster { get; set; }
         public virtual SetRoute Route { get; set; } = null!;

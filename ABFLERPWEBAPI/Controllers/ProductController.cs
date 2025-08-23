@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Google.Api.Gax.ResourceNames;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 
 namespace ABFLERPWEBAPI.Controllers
@@ -26,6 +28,27 @@ namespace ABFLERPWEBAPI.Controllers
         {
             var productData = _dbContext.SetProducts.FromSqlRaw($"GetProductByID @ProductID={productID}, @productName='{productName}' ").ToListAsync();
             return Ok(await productData);
+        }
+
+        [HttpGet("GetProductsInfo")]
+        public async Task<IActionResult> GetProductsInfo()
+        {
+            var productData = _dbContext.AndroidAppsGetProductInos.FromSqlRaw($"AndroidAppsGetProductIno").ToListAsync();
+            return Ok(await productData);
+        }
+
+        [HttpGet("GetProductPromotionInfo")]
+        public async Task<IActionResult> GetProductPromotionInfo(int EmployementID, int RouteID, string Date)
+        {
+            var productPromotionData = _dbContext.AndroidSPGetProductPromotionByEmployementIDs.FromSqlRaw($"AndroidSPGetProductPromotionByEmployementID @EmployementID={EmployementID}, @RouteID={RouteID}, @Date='{Date}'").ToListAsync();
+            return Ok(await productPromotionData);
+        }
+
+        [HttpGet("GetFreeSamplePolicyInfo")]
+        public async Task<IActionResult> GetFreeSamplePolicyInfo(int EmployementID, int RouteID, string Date)
+        {
+            var productPromotionData = _dbContext.AndroidSPGetFreeSamplePromotionByEmployementIDs.FromSqlRaw($"AndroidSPGetFreeSamplePromotionByEmployementID @EmployementID={EmployementID}, @RouteID={RouteID}, @Date='{Date}'").ToListAsync();
+            return Ok(await productPromotionData);
         }
     }
 }

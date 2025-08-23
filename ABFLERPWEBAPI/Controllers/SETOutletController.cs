@@ -1,5 +1,6 @@
 ﻿using ABFLERPWEBAPI.BO;
 using ABFLERPWEBAPI.Models;
+using ABFLERPWEBAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections;
@@ -15,9 +16,12 @@ namespace ABFLERPWEBAPI.Controllers
     {
 
         private readonly AkijSCMSDBContext _dbContext;
+        private readonly TranslationService _translationService;
         public SETOutletController(AkijSCMSDBContext dbContext)
         {
             _dbContext = dbContext;
+            string apiKey = "AIzaSyC6yMsRNjdgF4tZFiLhBgkc35mINsImZ_M";
+            _translationService = new TranslationService(apiKey);
         }
 
         [HttpPost]
@@ -40,27 +44,27 @@ namespace ABFLERPWEBAPI.Controllers
                     maxRouteWiseMaxNo = _dbContext.SetOutlets.Where(m => m.RouteId == routeId).Max(m => (int?)m.RouteOutletNo) ?? 0;
                 }
                 SetOutlet objOutletData = new SetOutlet();
-                if (outlet.Address != "")
-                {
-                    SetCluster setCluster = this._dbContext.SetClusters.FirstOrDefault(m => m.RouteId == outlet.RouteID && m.ClusterName.ToLower().Trim() == outlet.Address.ToLower().Trim());
-                    if (setCluster == null)
-                    {
-                        SetCluster sET_Cluster = new SetCluster();
-                        sET_Cluster.ClusterId = ++maxClusterID;
-                        sET_Cluster.ClusterName = outlet.Address;
-                        sET_Cluster.ClusterCode = "C-" + sET_Cluster.ClusterId.ToString();
-                        sET_Cluster.RouteId = new int?(outlet.RouteID);
-                        sET_Cluster.IsActive = true;
-                        sET_Cluster.LastUpdate = DateTime.Now;
-                        _dbContext.SetClusters.Add(sET_Cluster);
-                        _dbContext.SaveChanges();
-                        objOutletData.ClusterId = new int?(sET_Cluster.ClusterId);
-                    }
-                    else
-                    {
-                        objOutletData.ClusterId = new int?(setCluster.ClusterId);
-                    }
-                }
+                //if (outlet.Address != "")
+                //{
+                //    SetCluster setCluster = this._dbContext.SetClusters.FirstOrDefault(m => m.RouteId == outlet.RouteID && m.ClusterName.ToLower().Trim() == outlet.Address.ToLower().Trim());
+                //    if (setCluster == null)
+                //    {
+                //        SetCluster sET_Cluster = new SetCluster();
+                //        sET_Cluster.ClusterId = ++maxClusterID;
+                //        sET_Cluster.ClusterName = outlet.Address;
+                //        sET_Cluster.ClusterCode = "C-" + sET_Cluster.ClusterId.ToString();
+                //        sET_Cluster.RouteId = new int?(outlet.RouteID);
+                //        sET_Cluster.IsActive = true;
+                //        sET_Cluster.LastUpdate = DateTime.Now;
+                //        _dbContext.SetClusters.Add(sET_Cluster);
+                //        _dbContext.SaveChanges();
+                //        objOutletData.ClusterId = new int?(sET_Cluster.ClusterId);
+                //    }
+                //    else
+                //    {
+                //        objOutletData.ClusterId = new int?(setCluster.ClusterId);
+                //    }
+                //}
 
                 if (outlet.RouteID > 0)
                 {
@@ -82,6 +86,11 @@ namespace ABFLERPWEBAPI.Controllers
                     objOutletData.VillageName = "";
                     objOutletData.MarketName = "";
                     objOutletData.OutletTypeID = outlet.OutletTypeID;
+                    objOutletData.CigOutletTypeID = outlet.CigOutletTypeID;
+                    objOutletData.BkashNo = outlet.BkashNo;
+                    objOutletData.OutletPartnerID = outlet.OutletPartnerID;
+                    objOutletData.ClusterId = outlet.ClusterID;
+                    objOutletData.MFSTypeID = outlet.MFSTypeID;
 
                     _dbContext.SetOutlets.Add(objOutletData);
                 }
@@ -97,6 +106,30 @@ namespace ABFLERPWEBAPI.Controllers
                 response.StatusMessage = "Failed";
             }
             return response;
+        }
+
+
+        [HttpGet("GetOutletListByRouteID")]
+        public async Task<ActionResult<List<SetOutlet>>> GetOutletListByRouteID(int routeID)
+        {
+            var routeWiseOutletList = await _dbContext.SetOutlets.Where(m => m.RouteId == routeID).ToListAsync();
+
+            List<string> outletNameList = new List<string>();
+
+            foreach(var objOutlet in routeWiseOutletList)
+            {
+                string banglaOutlet = _translationService.TranslateToBangla(objOutlet.OutletName);
+                outletNameList.Add(banglaOutlet);
+            }
+
+            return Ok(routeWiseOutletList);
+        }
+
+        [HttpGet("GetOutletDetailsData")]
+        public async Task<IActionResult> GetOutletDetailsData(int DivisionID, int DepoID, int RegionID, int AreaID, int TerritoryID, int RouteID)
+        {
+            var outletData = await _dbContext.AndroidAppsGetOutletDetailsDatas.FromSqlRaw($"AndroidAppsGetOutletDetailsData @DivisionID={DivisionID}, @DepoID={DepoID}, @RegionID={RegionID}, @AreaID={AreaID}, @TerritoryID={TerritoryID},@RouteID={RouteID}" ).ToListAsync();
+            return Ok(outletData);
         }
     }
 }

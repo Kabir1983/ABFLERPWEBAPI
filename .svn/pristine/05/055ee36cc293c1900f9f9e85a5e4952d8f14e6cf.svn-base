@@ -1,0 +1,146 @@
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+namespace ABFLERPWEBAPI.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class MKTTourPlanController : ControllerBase
+    {
+        private readonly AkijSCMSDBContext _dbContext;
+        public MKTTourPlanController(AkijSCMSDBContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetMKTTourPlans()
+        {
+            return Ok(await _dbContext.MKTTourPlans.ToListAsync());
+        }
+
+        [HttpGet("GetMKTTourPlansByID")]
+        public async Task<IActionResult> GetMKTTourPlansByID(int MKTTourPlanID, string MKTTourPlanName)
+        {
+            var MKTTourPlanData = _dbContext.MKTTourPlans.FromSqlRaw($"GetMKTTourPlanByID @MKTTourPlanID={MKTTourPlanID}, @MKTTourPlanName='{MKTTourPlanName}' ").ToListAsync();
+            return Ok(await MKTTourPlanData);
+        }
+
+        //[HttpPost]
+        //[Route("PostTourPlan")]
+        //public async Task<IActionResult> SaveTourPlan([FromBody] MKTTourPlan objTourPlan)
+        //{
+        //    if (objTourPlan == null)
+        //    {
+        //        return BadRequest("Invalid Tour Plan data.");
+        //    }
+        //    MKTTourPlan objMKTTourPlan = new MKTTourPlan();
+
+        //    objMKTTourPlan = new MKTTourPlan();
+
+        //    long maxID = _dbContext.MKTTourPlans.Max(m => (long?)m.ID) ?? 0;
+        //    try
+        //    {
+        //        objMKTTourPlan.ID = maxID + 1;
+        //        objMKTTourPlan.EmploymentID = objTourPlan.EmploymentID;
+        //        objMKTTourPlan.RouteID = objTourPlan.RouteID;
+        //        objMKTTourPlan.RouteTypeID = objTourPlan.RouteTypeID;
+        //        objMKTTourPlan.RouteType = objTourPlan.RouteType;
+        //        objMKTTourPlan.RouteDistance = objTourPlan.RouteDistance;
+        //        objMKTTourPlan.ClusterID = objTourPlan.ClusterID;
+        //        objMKTTourPlan.OutletID = objTourPlan.OutletID;
+        //        objMKTTourPlan.OutletName = objTourPlan.OutletName;
+        //        objMKTTourPlan.Date = objTourPlan.Date;
+        //        objMKTTourPlan.VisitStatus = objTourPlan.VisitStatus;
+        //        objMKTTourPlan.VehicleTypeID = objTourPlan.VehicleTypeID;
+        //        objMKTTourPlan.VehicleType = objTourPlan.VehicleType;
+        //        objMKTTourPlan.IsActive = objTourPlan.IsActive;
+        //        objMKTTourPlan.LastUpdate = objTourPlan.LastUpdate;
+        //        await _dbContext.MKTTourPlans.AddAsync(objMKTTourPlan);
+        //        await _dbContext.SaveChangesAsync();
+        //        return Ok(new { Message = "Tour Plan Created Successfully", ID = objMKTTourPlan.ID, StatusCode = "200" });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, new
+        //        {
+        //            Message = "Internal Server Error",
+        //            Details = ex.Message,
+        //            StatusCode = "500"
+        //        });
+        //    }
+        //}
+
+        [HttpPost]
+        [Route("PostTourPlans")]
+        public async Task<IActionResult> SaveTourPlans([FromBody] List<MKTTourPlan> tourPlans)
+        {
+            if (tourPlans == null || !tourPlans.Any())
+            {
+                return BadRequest("Invalid or empty tour plan list.");
+            }
+
+            try
+            {
+                long maxID = await _dbContext.MKTTourPlans.MaxAsync(m => (long?)m.ID) ?? 0;
+
+                foreach (var plan in tourPlans)
+                {
+                    maxID++; // Increment ID manually if no identity column
+                    var existPlan = await _dbContext.MKTTourPlans.FirstOrDefaultAsync(m => m.Date == plan.Date && m.OutletID == plan.OutletID);
+                    if (existPlan == null)
+                    {
+                        MKTTourPlan objMKTTourPlan = new MKTTourPlan
+                        {
+                            ID = maxID,
+                            EmploymentID = plan.EmploymentID,
+                            RouteID = plan.RouteID,
+                            RouteTypeID = plan.RouteTypeID,
+                            RouteType = plan.RouteType,
+                            RouteDistance = plan.RouteDistance,
+                            ClusterID = plan.ClusterID,
+                            OutletID = plan.OutletID,
+                            OutletName = plan.OutletName,
+                            Date = plan.Date,
+                            VisitStatus = plan.VisitStatus,
+                            VehicleTypeID = plan.VehicleTypeID,
+                            VehicleType = plan.VehicleType,
+                            ApprovedByID = 0,
+                            ApprovedStatus = false,
+                            IsActive = plan.IsActive,
+                            LastUpdate = plan.LastUpdate
+                        };
+                        await _dbContext.MKTTourPlans.AddAsync(objMKTTourPlan);
+                    }
+                }
+
+                await _dbContext.SaveChangesAsync();
+
+                return Ok(new
+                {
+                    Message = "Tour Plans Created Successfully",
+                    StatusCode = "200",
+                    TotalInserted = tourPlans.Count
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "Internal Server Error",
+                    Details = ex.Message,
+                    StatusCode = "500"
+                });
+            }
+        }
+
+
+        [HttpGet("GetTourPlanReportDataForMobile")]
+        public async Task<IActionResult> GetTourPlanReportDataForMobile(int EmploymentID)
+        {
+            var cnData = await _dbContext.AndroidMKTSPGETTourPlanReports.FromSqlRaw($"AndroidMKTSPGETTourPlanReport @EmploymentID= {EmploymentID}").ToListAsync();
+            return Ok(cnData);
+        }
+    }
+}

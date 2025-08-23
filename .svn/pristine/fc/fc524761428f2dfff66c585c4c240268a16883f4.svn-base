@@ -1,0 +1,163 @@
+﻿using ABFLERPWEBAPI.BO;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+namespace ABFLERPWEBAPI.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class MKTOutletVisitController : ControllerBase
+    {
+        private readonly AkijSCMSDBContext _dbContext;
+        public MKTOutletVisitController(AkijSCMSDBContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetMKTOutletVisits()
+        {
+            return Ok(await _dbContext.MKTOutletVisits.ToListAsync());
+        }
+
+        [HttpGet("GetMKTOutletVisitsByID")]
+        public async Task<IActionResult> GetMKTOutletVisitsByID(int MKTOutletVisitID, string MKTOutletVisitName)
+        {
+            var MKTOutletVisitData = _dbContext.MKTOutletVisits.FromSqlRaw($"GetMKTOutletVisitByID @MKTOutletVisitID={MKTOutletVisitID}, @MKTOutletVisitName='{MKTOutletVisitName}' ").ToListAsync();
+            return Ok(await MKTOutletVisitData);
+        }
+
+        //[HttpPost]
+        //[Route("PostTourPlan")]
+        //public async Task<IActionResult> SaveTourPlan([FromBody] MKTOutletVisit objTourPlan)
+        //{
+        //    if (objTourPlan == null)
+        //    {
+        //        return BadRequest("Invalid Tour Plan data.");
+        //    }
+        //    MKTOutletVisit objMKTOutletVisit = new MKTOutletVisit();
+
+        //    objMKTOutletVisit = new MKTOutletVisit();
+
+        //    long maxID = _dbContext.MKTOutletVisits.Max(m => (long?)m.ID) ?? 0;
+        //    try
+        //    {
+        //        objMKTOutletVisit.ID = maxID + 1;
+        //        objMKTOutletVisit.EmploymentID = objTourPlan.EmploymentID;
+        //        objMKTOutletVisit.RouteID = objTourPlan.RouteID;
+        //        objMKTOutletVisit.RouteTypeID = objTourPlan.RouteTypeID;
+        //        objMKTOutletVisit.RouteType = objTourPlan.RouteType;
+        //        objMKTOutletVisit.RouteDistance = objTourPlan.RouteDistance;
+        //        objMKTOutletVisit.ClusterID = objTourPlan.ClusterID;
+        //        objMKTOutletVisit.OutletID = objTourPlan.OutletID;
+        //        objMKTOutletVisit.OutletName = objTourPlan.OutletName;
+        //        objMKTOutletVisit.Date = objTourPlan.Date;
+        //        objMKTOutletVisit.VisitStatus = objTourPlan.VisitStatus;
+        //        objMKTOutletVisit.VehicleTypeID = objTourPlan.VehicleTypeID;
+        //        objMKTOutletVisit.VehicleType = objTourPlan.VehicleType;
+        //        objMKTOutletVisit.IsActive = objTourPlan.IsActive;
+        //        objMKTOutletVisit.LastUpdate = objTourPlan.LastUpdate;
+        //        await _dbContext.MKTOutletVisits.AddAsync(objMKTOutletVisit);
+        //        await _dbContext.SaveChangesAsync();
+        //        return Ok(new { Message = "Tour Plan Created Successfully", ID = objMKTOutletVisit.ID, StatusCode = "200" });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, new
+        //        {
+        //            Message = "Internal Server Error",
+        //            Details = ex.Message,
+        //            StatusCode = "500"
+        //        });
+        //    }
+        //}
+
+        [HttpPost]
+        [Route("PostOutletVisit")]
+        public async Task<IActionResult> SaveOutletVisits([FromBody] OutletVisit outletVisit)
+        {
+            if (outletVisit == null)
+            {
+                return BadRequest("Invalid or empty outlet visit.");
+            }
+
+            try
+            {
+                long maxID = await _dbContext.MKTOutletVisits.MaxAsync(m => (long?)m.ID) ?? 0;
+                long maxOVDID = await _dbContext.MKTOutletVisitDetailss.MaxAsync(m => (long?)m.ID) ?? 0;
+
+                MKTOutletVisit objMktOutletVisit = new MKTOutletVisit();
+
+                objMktOutletVisit.ID = ++maxID;
+                objMktOutletVisit.OutletID = outletVisit.OutletID;
+                objMktOutletVisit.OutletName = outletVisit.OutletName;
+                objMktOutletVisit.TourPlanID = outletVisit.TourPlanID;
+                objMktOutletVisit.Date = outletVisit.Date;
+                objMktOutletVisit.RouteID = outletVisit.RouteID;
+                objMktOutletVisit.ClusterID = outletVisit.ClusterID;
+                objMktOutletVisit.ContactNo = outletVisit.ContactNo;
+                objMktOutletVisit.IsActive = true;
+                objMktOutletVisit.LastUpdate = DateTime.Now;
+                objMktOutletVisit.Latitude = Math.Round(outletVisit.Latitude ?? 0, 7);
+                objMktOutletVisit.Longitude = Math.Round(outletVisit.Longitude ?? 0, 7);
+
+                await _dbContext.MKTOutletVisits.AddAsync(objMktOutletVisit);
+
+                if (objMktOutletVisit.OutletID > 0)
+                {
+                    var objOutlet = await _dbContext.SetOutlets.FirstOrDefaultAsync(m => m.OutletId == objMktOutletVisit.OutletID && m.Latitude == null);
+                    if (objOutlet != null)
+                    {
+                        objOutlet.Latitude = Math.Round(outletVisit.Latitude ?? 0, 7);
+                        objOutlet.Longitude = Math.Round(outletVisit.Longitude ?? 0, 7);
+                        objOutlet.GPSAddress = outletVisit.GPSAddress;
+                    }
+                }
+
+                if (outletVisit.Details.Count > 0)
+                {
+                    foreach (var plan in outletVisit.Details)
+                    {
+
+                        MKTOutletVisitDetails objMKTOutletVisitDetails = new MKTOutletVisitDetails
+                        {
+                            ID = ++maxOVDID,
+                            OVID = maxID,
+                            ParameterID = plan.ParameterID,
+                            VerifyStatus = plan.VerifyStatus,
+                            IsActive = true,
+                            LastUpdate = DateTime.Now,
+                        };
+                        await _dbContext.MKTOutletVisitDetailss.AddAsync(objMKTOutletVisitDetails);
+                    }
+                    await _dbContext.SaveChangesAsync();
+                }
+
+                return Ok(new
+                {
+                    Message = "Outlet Visit Created Successfully",
+                    StatusCode = "200",
+                    TotalInserted = outletVisit.Details.Count
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "Internal Server Error",
+                    Details = ex.Message,
+                    StatusCode = "500"
+                });
+            }
+        }
+
+
+        [HttpGet("GetOutletVisitDataForMobile")]
+        public async Task<IActionResult> GetOutletVisitDataForMobile(long EmploymentID)
+        {
+            var cnData = await _dbContext.AndroidMKTSPGETOutletVisitReports.FromSqlRaw($"AndroidMKTSPGETOutletVisitReport @EmploymentID= {EmploymentID}").ToListAsync();
+            return Ok(cnData);
+        }
+    }
+}

@@ -23,7 +23,6 @@ namespace ABFLERPWEBAPI.Controllers
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
-
         }
 
         // GET api/<DMSFactoryProductionBarcodeController>/5
@@ -96,8 +95,7 @@ namespace ABFLERPWEBAPI.Controllers
         [HttpGet("GetSoleDepotWithChildDepotZeroBalanceExpense")]
         public async Task<ActionResult<List<ACCSPGETTopSheetProductExpenseForDepotWithChildDepot>>> GetSoleDepotWithChildDepotZeroBalanceReportExpense(int depotID, string date)
         {
-
-            var zeroBalanceReportData = await _dbContext.ACCSPGETTopSheetProductExpenseForDepotWithChildDepots.FromSqlRaw($"ACCSPGETTopSheetProductExpenseForDepotWithChildDepot @DepoParam= {depotID}, @DateFrom='{date}', @DateTo='{date}'").ToListAsync();
+            var zeroBalanceReportData = await _dbContext.ACCSPGETTopSheetProductExpenseForDepotWithChildDepots.FromSqlRaw($"ACCSPGETTopSheetProductExpenseForDepotWithChildDepot1 @DepoParam= {depotID}, @DateFrom='{date}', @DateTo='{date}'").ToListAsync();
             return Ok(zeroBalanceReportData);
         }
 
@@ -105,11 +103,25 @@ namespace ABFLERPWEBAPI.Controllers
         [HttpGet("GetDMSSPGetSDWCDZeroBalanceSalesReportByDepoAndDate")]
         public async Task<ActionResult<List<DMSSPGetSDWCDZeroBalanceSalesReportByDepoAndDate>>> GetDMSSPGetSDWCDZeroBalanceSalesReportByDepoAndDate(int depotID, string date)
         {
-
             var zeroBalanceReportData = await _dbContext.DMSSPGetSDWCDZeroBalanceSalesReportByDepoAndDates.FromSqlRaw($"DMSSPGetSDWCDZeroBalanceSalesReportByDepoAndDate @DepoID= {depotID}, @Date='{date}'").ToListAsync();
             return Ok(zeroBalanceReportData);
         }
 
+        [HttpGet("GetDMSSPGetSDWCDZeroBalanceExpenseReportByDepoAndDate")]
+        public async Task<ActionResult<List<DMSSPGetSDWCDZeroBalanceSalesReportByDepoAndDate>>> GetDMSSPGetSDWCDZeroBalanceExpenseReportByDepoAndDate(int depotID, string date)
+        {
+
+            var zeroBalanceReportData = await _dbContext.DMSSPGetSDWCDZeroBalanceExpenseReportByDepoAndDates.FromSqlRaw($"DMSSPGetSDWCDZeroBalanceExpenseReportByDepoAndDate @DepoID= {depotID}, @Date='{date}'").ToListAsync();
+            return Ok(zeroBalanceReportData);
+        }
+
+        [HttpGet("GetDMSSPGetSDWCDZeroBalanceMiscellaneousIncomeReportByDepoAndDate")]
+        public async Task<ActionResult<List<DMSSPGetSDWCDZeroBalanceSalesReportByDepoAndDate>>> GetDMSSPGetSDWCDZeroBalanceMiscellaneousIncomeReportByDepoAndDate(int depotID, string date)
+        {
+
+            var zeroBalanceReportData = await _dbContext.DMSSPGetSDWCDZeroBalanceMiscellaneousIncomeReportByDepoAndDates.FromSqlRaw($"DMSSPGetSDWCDZeroBalanceMiscellaneousIncomeReportByDepoAndDate @DepoID= {depotID}, @Date='{date}'").ToListAsync();
+            return Ok(zeroBalanceReportData);
+        }
 
         [HttpGet("CheckZeroBalanceReportSaveDataExist")]
         public bool CheckZeroBalanceReportSaveDataExist(int depotID, string date)
@@ -125,12 +137,42 @@ namespace ABFLERPWEBAPI.Controllers
         }
 
 
+
+        [HttpGet("CheckHOExpenseApprovalDataExist")]
+        public bool CheckHOExpenseApprovalDataExist(int hoID, int depotID, string date)
+        {
+            bool isExist = false;
+            DateTime Date = Convert.ToDateTime(date);
+            var ZBRIIDs = new List<int> { 134, 135, 136, 137, 138, 139, 140, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 149, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 121, 122, 212, 213, 214, 215, 257, 260 };
+            var totalRecordCound = _dbContext.DMS_SDWCDZeroBalanceReportExpenseSides.Where(m => m.SoleDepotID == depotID && m.Date == Date && m.TranType == 3 && m.ApprovedByHO == hoID && ZBRIIDs.Contains(m.ZBRIID)).ToList().Count();
+            if (totalRecordCound > 0)
+            {
+                isExist = true;
+            }
+            return isExist;
+        }
+
+        [HttpGet("CheckDOExpenseApprovalDataExist")]
+        public bool CheckDOExpenseApprovalDataExist(int doID, int depotID, string date)
+        {
+            bool isExist = false;
+            DateTime Date = Convert.ToDateTime(date);
+            var ZBRIIDs = new List<int> { 134, 135, 136, 137, 138, 139, 140, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 149, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 121, 122, 212, 213, 214, 215, 257, 260 };
+            var totalRecordCound = _dbContext.DMS_SDWCDZeroBalanceReportExpenseSides.Where(m => m.SoleDepotID == depotID && m.Date == Date && m.TranType == 3 && m.ApprovedByHO == doID && ZBRIIDs.Contains(m.ZBRIID)).ToList().Count();
+            if (totalRecordCound > 0)
+            {
+                isExist = true;
+            }
+            return isExist;
+        }
+
+
         [HttpGet("CheckHOApprovalDataExist")]
         public bool CheckHOApprovalDataExist(int hoID, int depotID, string date)
         {
             bool isExist = false;
             DateTime Date = Convert.ToDateTime(date);
-            var productIds = new List<int> { 1, 2, 3, 5, 7, 8, 17, 19 };
+            var productIds = new List<int> { 1, 2, 3, 4, 5, 7, 8, 17, 19 };
             var totalRecordCound = _dbContext.DMSSDWCDZeroBalanceReportStockSides.Where(m => m.SoleDepotID == depotID && m.Date == Date && m.TranType == 3 && m.ApprovedByHO == hoID && productIds.Contains(m.ProductID)).ToList().Count();
             if (totalRecordCound > 0)
             {
@@ -144,7 +186,7 @@ namespace ABFLERPWEBAPI.Controllers
         {
             bool isExist = false;
             DateTime Date = Convert.ToDateTime(date);
-            var productIds = new List<int> { 1, 2, 3, 5, 7, 8, 17, 19 };
+            var productIds = new List<int> { 1, 2, 3, 4, 5, 7, 8, 17, 19 };
             var totalRecordCound = _dbContext.DMSSDWCDZeroBalanceReportStockSides.Where(m => m.SoleDepotID == depotID && m.Date == Date && m.TranType == 3 && m.ApprovedByDO == doID && productIds.Contains(m.ProductID)).ToList().Count();
             if (totalRecordCound > 0)
             {
@@ -238,6 +280,78 @@ namespace ABFLERPWEBAPI.Controllers
             return response;
         }
 
+
+        [HttpPost]
+        [Route("UpdateSDWCDZeroBalanceATCLSalesDOApproval")]
+        public Response UpdateSDWCDZeroBalanceATCLSalesDOApproval(ArrayList arrayList)
+        {
+            Response response = new Response();
+
+            List<BO.SearchParameter> objSPList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<BO.SearchParameter>>(arrayList[0].ToString());
+
+            BO.SearchParameter objSP = objSPList[0];
+
+            var productIds = new List<int> { 14, 15, 16, 18, 20, 21 };
+
+            var sdWCDSalesDataList = _dbContext.DMSSDWCDZeroBalanceReportStockSides.Where(m => m.Date == Convert.ToDateTime(objSP.Date) && m.SoleDepotID == objSP.DepoID && m.TranType == 3 && productIds.Contains(m.ProductID)).ToList();
+
+            if (sdWCDSalesDataList != null)
+            {
+                foreach (var objDMSSDWCDZeroBalanceReportExpenseSide in sdWCDSalesDataList)
+                {
+                    objDMSSDWCDZeroBalanceReportExpenseSide.ApprovedByDO = objSP.DOID;
+                    _dbContext.DMSSDWCDZeroBalanceReportStockSides.Update(objDMSSDWCDZeroBalanceReportExpenseSide);
+                }
+            }
+            if (_dbContext.SaveChanges() > 0)
+            {
+                response.StatusCode = 200;
+                response.StatusMessage = "Save Success";
+            }
+            else
+            {
+                response.StatusCode = 100;
+                response.StatusMessage = "Failed";
+            }
+            return response;
+        }
+
+
+        [HttpPost]
+        [Route("UpdateSDWCDZeroBalanceATCLSalesHOApproval")]
+        public Response UpdateSDWCDZeroBalanceATCLSalesHOApproval(ArrayList arrayList)
+        {
+            Response response = new Response();
+
+            List<BO.SearchParameter> objSPList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<BO.SearchParameter>>(arrayList[0].ToString());
+
+            BO.SearchParameter objSP = objSPList[0];
+
+            var productIds = new List<int> { 14, 15, 16, 18, 20, 21 };
+
+            var sdWCDSalesDataList = _dbContext.DMSSDWCDZeroBalanceReportStockSides.Where(m => m.Date == Convert.ToDateTime(objSP.Date) && m.SoleDepotID == objSP.DepoID && m.TranType == 3 && productIds.Contains(m.ProductID)).ToList();
+
+            if (sdWCDSalesDataList != null)
+            {
+                foreach (var objDMSSDWCDZeroBalanceReportExpenseSide in sdWCDSalesDataList)
+                {
+                    objDMSSDWCDZeroBalanceReportExpenseSide.ApprovedByHO = objSP.HOID;
+                    _dbContext.DMSSDWCDZeroBalanceReportStockSides.Update(objDMSSDWCDZeroBalanceReportExpenseSide);
+                }
+            }
+            if (_dbContext.SaveChanges() > 0)
+            {
+                response.StatusCode = 200;
+                response.StatusMessage = "Save Success";
+            }
+            else
+            {
+                response.StatusCode = 100;
+                response.StatusMessage = "Failed";
+            }
+            return response;
+        }
+
         [HttpPost]
         [Route("UpdateSDWCDZeroBalanceSalesDOApproval")]
         public Response UpdateSDWCDZeroBalanceSalesDOApproval(ArrayList arrayList)
@@ -248,7 +362,7 @@ namespace ABFLERPWEBAPI.Controllers
 
             BO.SearchParameter objSP = objSPList[0];
 
-            var productIds = new List<int> { 1, 2, 3, 5, 7, 8, 17, 19 };
+            var productIds = new List<int> { 1, 2, 3, 4, 5, 7, 8, 17, 19 };
 
             var sdWCDSalesDataList = _dbContext.DMSSDWCDZeroBalanceReportStockSides.Where(m => m.Date == Convert.ToDateTime(objSP.Date) && m.SoleDepotID == objSP.DepoID && m.TranType == 3 && productIds.Contains(m.ProductID)).ToList();
 
@@ -283,8 +397,10 @@ namespace ABFLERPWEBAPI.Controllers
             List<BO.SearchParameter> objSPList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<BO.SearchParameter>>(arrayList[0].ToString());
 
             BO.SearchParameter objSP = objSPList[0];
+            var productIds = new List<int> { 1, 2, 3, 4, 5, 7, 8, 17, 19 };
+            // var productIds = new List<int> { 1, 14, 15, 16, 18, 20, 21 };
 
-            var sdWCDSalesDataList = _dbContext.DMSSDWCDZeroBalanceReportStockSides.Where(m => m.Date == Convert.ToDateTime(objSP.Date) && m.SoleDepotID == objSP.DepoID && m.TranType == 3).ToList();
+            var sdWCDSalesDataList = _dbContext.DMSSDWCDZeroBalanceReportStockSides.Where(m => m.Date == Convert.ToDateTime(objSP.Date) && m.SoleDepotID == objSP.DepoID && m.TranType == 3 && productIds.Contains(m.ProductID)).ToList();
 
             if (sdWCDSalesDataList != null)
             {
@@ -292,6 +408,78 @@ namespace ABFLERPWEBAPI.Controllers
                 {
                     objDMSSDWCDZeroBalanceReportExpenseSide.ApprovedByHO = objSP.HOID;
                     _dbContext.DMSSDWCDZeroBalanceReportStockSides.Update(objDMSSDWCDZeroBalanceReportExpenseSide);
+                }
+            }
+            if (_dbContext.SaveChanges() > 0)
+            {
+                response.StatusCode = 200;
+                response.StatusMessage = "Save Success";
+            }
+            else
+            {
+                response.StatusCode = 100;
+                response.StatusMessage = "Failed";
+            }
+            return response;
+        }
+
+
+        [HttpPost]
+        [Route("UpdateSDWCDExpenseZeroBalanceDOApproval")]
+        public Response UpdateSDWCDExpenseZeroBalanceDOApproval(ArrayList arrayList)
+        {
+            Response response = new Response();
+
+            List<BO.SearchParameter> objSPList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<BO.SearchParameter>>(arrayList[0].ToString());
+
+            BO.SearchParameter objSP = objSPList[0];
+
+            var ZBRIIDs = new List<int> { 134, 135, 136, 137, 138, 139, 140, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 149, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 121, 122, 212, 213, 214, 215, 257, 260 };
+
+            var sdWCDExpenseDataList = _dbContext.DMS_SDWCDZeroBalanceReportExpenseSides.Where(m => m.Date == Convert.ToDateTime(objSP.Date) && m.SoleDepotID == objSP.DepoID && ZBRIIDs.Contains(m.ZBRIID)).ToList();
+
+            if (sdWCDExpenseDataList != null)
+            {
+                foreach (var objDMSSDWCDZeroBalanceReportExpenseSide in sdWCDExpenseDataList)
+                {
+                    objDMSSDWCDZeroBalanceReportExpenseSide.ApprovedByDO = objSP.DOID;
+                    _dbContext.DMS_SDWCDZeroBalanceReportExpenseSides.Update(objDMSSDWCDZeroBalanceReportExpenseSide);
+                }
+            }
+            if (_dbContext.SaveChanges() > 0)
+            {
+                response.StatusCode = 200;
+                response.StatusMessage = "Save Success";
+            }
+            else
+            {
+                response.StatusCode = 100;
+                response.StatusMessage = "Failed";
+            }
+            return response;
+        }
+
+
+        [HttpPost]
+        [Route("UpdateSDWCDExpenseZeroBalanceHOApproval")]
+        public Response UpdateSDWCDExpenseZeroBalanceHOApproval(ArrayList arrayList)
+        {
+            Response response = new Response();
+
+            List<BO.SearchParameter> objSPList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<BO.SearchParameter>>(arrayList[0].ToString());
+
+            BO.SearchParameter objSP = objSPList[0];
+
+            var ZBRIIDs = new List<int> { 134, 135, 136, 137, 138, 139, 140, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 149, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 121, 122, 212, 213, 214, 215, 257, 260 };
+
+            var sdWCDExpenseDataList = _dbContext.DMS_SDWCDZeroBalanceReportExpenseSides.Where(m => m.Date == Convert.ToDateTime(objSP.Date) && m.SoleDepotID == objSP.DepoID && ZBRIIDs.Contains(m.ZBRIID)).ToList();
+
+            if (sdWCDExpenseDataList != null)
+            {
+                foreach (var objDMSSDWCDZeroBalanceReportExpenseSide in sdWCDExpenseDataList)
+                {
+                    objDMSSDWCDZeroBalanceReportExpenseSide.ApprovedByHO = objSP.HOID;
+                    _dbContext.DMS_SDWCDZeroBalanceReportExpenseSides.Update(objDMSSDWCDZeroBalanceReportExpenseSide);
                 }
             }
             if (_dbContext.SaveChanges() > 0)

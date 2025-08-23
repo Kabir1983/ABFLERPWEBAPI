@@ -5,6 +5,7 @@
         public int StatusCode { get; set; }
         public string StatusMessage { get; set; }
         public string ErrorMessage { get; set; }
+        public int PostID { get; set; }
         public SetUser SetUser { get; set; }
 
     }

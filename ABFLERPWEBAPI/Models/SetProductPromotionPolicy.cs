@@ -1,0 +1,31 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace ABFLERPWEBAPI.Models
+{
+    public partial class SetProductPromotionPolicy
+    {
+        public int ID { get; set; }
+        public int? DepoID { get; set; }
+        public int? RegionID { get; set; }
+        public int? AreaID { get; set; }
+        public int? TerritoryID { get; set; }
+        public int? RouteID { get; set; }
+        public short ProductID { get; set; }
+        public string ProgrammeName { get; set; }
+        public decimal SticksQty { get; set; }
+        public decimal? DiscountQty { get; set; }
+        public decimal? DiscountAmount { get; set; }
+        public short? FreeProductID { get; set; }
+        public decimal? FreeQty { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public bool? IsDepo { get; set; }
+        public bool? IsRegion { get; set; }
+        public bool? IsArea { get; set; }
+        public bool? IsTerritory { get; set; }
+        public bool? IsRoute { get; set; }
+        public bool IsActive { get; set; }
+        public DateTime LastUpdate { get; set; }
+    }
+}

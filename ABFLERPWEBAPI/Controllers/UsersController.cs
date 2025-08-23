@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Cors;
 using ABFLERPWEBAPI.BO;
+using Microsoft.CodeAnalysis;
+using System.Threading.Tasks;
 
 namespace ABFLERPWEBAPI.Controllers
 {
@@ -67,31 +69,132 @@ namespace ABFLERPWEBAPI.Controllers
         [Route("Login")]
         public Response Login(string userid, string password)
         {
+            Response response = new Response();
+            var objSearchUser = _dbContext.SetUsers.FirstOrDefault(m => m.UserId == userid);
+
             string decriptPass = Common.HashValue.Encrypt(password);
 
-            var objUser = _dbContext.SetUsers.FirstOrDefault(m => m.UserId == userid && m.Password == decriptPass);
-            Response response = new Response();
-            if (objUser == null)
+            var objValidUser = _dbContext.SecuredUsers.Where(m => m.EmployeeId == objSearchUser.EmployeeId && m.SecureWord == decriptPass).OrderByDescending(m => m.Id).FirstOrDefault();
+
+            if (objValidUser == null)
             {
-                response.StatusCode = 100;
-                response.StatusMessage = "Login Faild";
-                response.SetUser = null;
+                var objUser = _dbContext.SetUsers.FirstOrDefault(m => m.UserId == userid && m.Password == decriptPass);
+
+                if (objUser == null)
+                {
+                    response.StatusCode = 100;
+                    response.StatusMessage = "Login Faild";
+                    response.SetUser = null;
+                }
+                else
+                {
+                    string tokenString = GetRandomAlphanumericString(15);
+                    objUser.Token = tokenString;
+                    objUser.LoginTime = DateTime.Now;
+                    response.StatusCode = 200;
+                    response.StatusMessage = "Login Success";
+                    SetUser setUser = new SetUser();
+                    setUser.UserId = objUser.UserId;
+                    setUser.Password = objUser.Password;
+                    setUser.IsActive = objUser.IsActive;
+                    setUser.LastUpdate = objUser.LastUpdate;
+                    setUser.Token = objUser.Token;
+                    setUser.LoginTime = objUser.LoginTime;
+                    response.SetUser = setUser;
+                }
             }
             else
             {
                 string tokenString = GetRandomAlphanumericString(15);
-                objUser.Token = tokenString;
-                objUser.LoginTime = DateTime.Now;
+                string token = tokenString;
                 response.StatusCode = 200;
                 response.StatusMessage = "Login Success";
                 SetUser setUser = new SetUser();
-                setUser.UserId = objUser.UserId;
-                setUser.Password = objUser.Password;
-                setUser.IsActive = objUser.IsActive;
-                setUser.LastUpdate = objUser.LastUpdate;
-                setUser.Token = objUser.Token;
-                setUser.LoginTime = objUser.LoginTime;
+                setUser.UserId = objSearchUser.UserId;
+                setUser.Password = objValidUser.SecureWord;
+                setUser.IsActive = objSearchUser.IsActive;
+                setUser.LastUpdate = objSearchUser.LastUpdate;
+                setUser.Token = token;
+                setUser.LoginTime = DateTime.Now;
                 response.SetUser = setUser;
+            }
+            return response;
+        }
+
+        [HttpPost]
+        [Route("LoginIcon")]
+        public async Task<Response> LoginApps(LoginModel loginModel)
+        {
+            Response response = new Response();
+            var objSearchUser = _dbContext.SetUsers.FirstOrDefault(m => m.UserId == loginModel.UserName);
+
+            string decriptPass = Common.HashValue.Encrypt(loginModel.Password);
+
+            var objValidUser = _dbContext.SecuredUsers.Where(m => m.EmployeeId == objSearchUser.EmployeeId && m.SecureWord == decriptPass).OrderByDescending(m => m.Id).FirstOrDefault();
+
+            if (objValidUser == null)
+            {
+                var objUser = _dbContext.SetUsers.FirstOrDefault(m => m.UserId == loginModel.UserName && m.Password == decriptPass);
+
+                if (objUser == null)
+                {
+                    response.StatusCode = 100;
+                    response.StatusMessage = "Login Faild";
+                    response.SetUser = null;
+                }
+                else
+                {
+                    var hrmPIEmployement = await _dbContext.HrmPiemployements.FirstOrDefaultAsync(m => m.Piid == objUser.EmployeeId && m.IsActive == true);
+                    if (hrmPIEmployement != null)
+                    {
+                        string tokenString = GetRandomAlphanumericString(15);
+                        objUser.Token = tokenString;
+                        objUser.LoginTime = DateTime.Now;
+                        response.StatusCode = 200;
+                        response.StatusMessage = "Login Success";
+                        response.PostID = hrmPIEmployement.DesignationId;
+                        SetUser setUser = new SetUser();
+                        setUser.UserId = objUser.UserId;
+                        setUser.Password = objUser.Password;
+                        setUser.IsActive = objUser.IsActive;
+                        setUser.LastUpdate = objUser.LastUpdate;
+                        setUser.Token = objUser.Token;
+                        setUser.LoginTime = objUser.LoginTime;
+                        response.SetUser = setUser;
+                    }
+                    else
+                    {
+                        response.StatusCode = 100;
+                        response.StatusMessage = "Login Faild";
+                        response.SetUser = null;
+                    }
+                }
+            }
+            else
+            {
+                var hrmPIEmployement = await _dbContext.HrmPiemployements.FirstOrDefaultAsync(m => m.Piid == objValidUser.EmployeeId && m.IsActive == true);
+                if (hrmPIEmployement != null)
+                {
+                    string tokenString = GetRandomAlphanumericString(15);
+                    string token = tokenString;
+                    response.StatusCode = 200;
+                    response.StatusMessage = "Login Success";
+                    response.PostID = hrmPIEmployement.DesignationId;
+                    SetUser setUser = new SetUser();
+                    setUser.UserId = objSearchUser.UserId;
+                    setUser.Password = objValidUser.SecureWord;
+                    setUser.IsActive = objSearchUser.IsActive;
+                    setUser.LastUpdate = objSearchUser.LastUpdate;
+                    setUser.Token = token;
+                    setUser.LoginTime = DateTime.Now;
+                    response.SetUser = setUser;
+                }
+                else
+                {
+                    response.StatusCode = 100;
+                    response.StatusMessage = "Login Faild";
+                    response.SetUser = null;
+                }
             }
             return response;
         }
@@ -110,7 +213,7 @@ namespace ABFLERPWEBAPI.Controllers
 
                 var objValidUser = _dbContext.SecuredUsers.Where(m => m.EmployeeId == objSearchUser.EmployeeId && m.SecureWord == decriptPass).OrderByDescending(m => m.Id).FirstOrDefault();
 
-                if(objValidUser == null)
+                if (objValidUser == null)
                 {
                     var objUser = _dbContext.SetUsers.FirstOrDefault(m => m.UserId == loginModel.UserName && m.Password == decriptPass);
 
@@ -151,7 +254,7 @@ namespace ABFLERPWEBAPI.Controllers
                     setUser.Token = token;
                     setUser.LoginTime = DateTime.Now;
                     response.SetUser = setUser;
-                }                
+                }
             }
             else
             {
@@ -197,6 +300,14 @@ namespace ABFLERPWEBAPI.Controllers
                 result[i] = characterArray[value % (uint)characterArray.Length];
             }
             return new string(result);
+        }
+
+
+        [HttpGet("GetUserDetailsInfo")]
+        public async Task<IActionResult> GetUserDetailsInfo(string UserID)
+        {
+            var userData = _dbContext.AndroidAppsGetUserInfoByUserIDs.FromSqlRaw("EXEC AndroidAppsGetUserInfoByUserID @UserID = {0}", UserID).ToListAsync(); 
+            return Ok(await userData);
         }
     }
 }

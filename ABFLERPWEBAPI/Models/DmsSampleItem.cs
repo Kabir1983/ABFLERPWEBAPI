@@ -19,5 +19,8 @@ namespace ABFLERPWEBAPI.Models
         public virtual SetProduct Product { get; set; } = null!;
         public virtual DmsSample Sample { get; set; } = null!;
         public virtual ICollection<DmsSampleItemSmoker> DmsSampleItemSmokers { get; set; }
+
+        public short? SampleTypeID { get; set; }
+
     }
 }

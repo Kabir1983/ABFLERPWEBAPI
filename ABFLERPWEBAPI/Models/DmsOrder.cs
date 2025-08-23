@@ -24,5 +24,23 @@ namespace ABFLERPWEBAPI.Models
         public virtual HrmPiemployement Employeement { get; set; } = null!;
         public virtual SetOutlet? Outlet { get; set; }
         public virtual ICollection<DmsOrderDetail> DmsOrderDetails { get; set; }
+
+        public long? MemoStart { get; set; }
+
+        public long? MemoEnd { get; set; }
+
+        public byte? DivisionID { get; set; }
+
+        public int? DepoID { get; set; }
+
+        public int? RegionID { get; set; }
+
+        public int? AreaID { get; set; }
+
+        public int? TerritoryID { get; set; }
+
+        public int? RouteID { get; set; }
+
+        public bool? IsPointOrder { get; set; }
     }
 }

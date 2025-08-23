@@ -68,6 +68,7 @@ namespace ABFLERPWEBAPI.Models
         public virtual DbSet<DeleteOrderDetail> DeleteOrderDetails { get; set; } = null!;
         public virtual DbSet<DmsAreaChallanAgainstAreaRequest> DmsAreaChallanAgainstAreaRequests { get; set; } = null!;
         public virtual DbSet<DmsAreaChallanForPoint> DmsAreaChallanForPoints { get; set; } = null!;
+        public virtual DbSet<DmsRouteWiseSalesTargetInc> DmsRouteWiseSalesTargetIncs { get; set; } = null!;
         public virtual DbSet<DmsAreaChallanForPointDelete> DmsAreaChallanForPointDeletes { get; set; } = null!;
         public virtual DbSet<DmsAreaChallanItemForPoint> DmsAreaChallanItemForPoints { get; set; } = null!;
         public virtual DbSet<DmsAreaChallanItemForPointDelete> DmsAreaChallanItemForPointDeletes { get; set; } = null!;
@@ -141,6 +142,9 @@ namespace ABFLERPWEBAPI.Models
         public virtual DbSet<DmsDepoReturnReceiveDetail> DmsDepoReturnReceiveDetails { get; set; } = null!;
         public virtual DbSet<DmsDepoStock> DmsDepoStocks { get; set; } = null!;
         public virtual DbSet<DmsDepoStockZeroBakup> DmsDepoStockZeroBakups { get; set; } = null!;
+        public virtual DbSet<DMSSalesTargetWiseTotalMemo> DMSSalesTargetWiseTotalMemos { get; set; } = null!;
+        public virtual DbSet<DMSSalesTargetWiseTotalMemoPoint> DMSSalesTargetWiseTotalMemoPoints { get; set; } = null!;
+        public virtual DbSet<DMSSalesTargetWiseTotalMemoDealer> DMSSalesTargetWiseTotalMemoDealers { get; set; } = null!;
         public virtual DbSet<DmsDepoToDepoChallan> DmsDepoToDepoChallans { get; set; } = null!;
         public virtual DbSet<DmsDepoToDepoChallanItem> DmsDepoToDepoChallanItems { get; set; } = null!;
         public virtual DbSet<DmsDepoToDepoRequisition> DmsDepoToDepoRequisitions { get; set; } = null!;
@@ -250,6 +254,7 @@ namespace ABFLERPWEBAPI.Models
         public virtual DbSet<DmsSrwiseTargetDel> DmsSrwiseTargetDels { get; set; } = null!;
         public virtual DbSet<DmsTargetPlan> DmsTargetPlans { get; set; } = null!;
         public virtual DbSet<DmsTargetPlanItem> DmsTargetPlanItems { get; set; } = null!;
+        public virtual DbSet<DmsOutletWiseIncentive> DmsOutletWiseIncentives { get; set; } = null!;
         public virtual DbSet<FacBandRollCounting> FacBandRollCountings { get; set; } = null!;
         public virtual DbSet<FacBandRollReceivedInfo> FacBandRollReceivedInfos { get; set; } = null!;
         public virtual DbSet<FacDailyItemDisToWorker> FacDailyItemDisToWorkers { get; set; } = null!;
@@ -362,6 +367,7 @@ namespace ABFLERPWEBAPI.Models
         public virtual DbSet<HrmTourAttendanceDetail> HrmTourAttendanceDetails { get; set; } = null!;
         public virtual DbSet<HrmWorkingDay> HrmWorkingDays { get; set; } = null!;
         public virtual DbSet<Log> Logs { get; set; } = null!;
+        public virtual DbSet<MKTTourPlan> MKTTourPlans { get; set; } = null!;
         public virtual DbSet<OocAreaVisitPlan> OocAreaVisitPlans { get; set; } = null!;
         public virtual DbSet<OocDailySmokerContact> OocDailySmokerContacts { get; set; } = null!;
         public virtual DbSet<OocOutletSaleTargetPlan> OocOutletSaleTargetPlans { get; set; } = null!;
@@ -370,6 +376,11 @@ namespace ABFLERPWEBAPI.Models
         public virtual DbSet<OocOutletSaleTargetPlanItemDelDatum> OocOutletSaleTargetPlanItemDelData { get; set; } = null!;
         public virtual DbSet<OocOutletVisit> OocOutletVisits { get; set; } = null!;
         public virtual DbSet<OocOutletVisitPlan> OocOutletVisitPlans { get; set; } = null!;
+        public virtual DbSet<SetOutletVisitParameter> SetOutletVisitParameters { get; set; } = null!;
+        public virtual DbSet<SetVehicleType> SetVehicleTypes { get; set; } = null!;
+        public virtual DbSet<SetVisitFrequency> SetVisitFrequencys { get; set; } = null!;
+        public virtual DbSet<MKTOutletVisit> MKTOutletVisits { get; set; } = null!;
+        public virtual DbSet<MKTOutletVisitDetails> MKTOutletVisitDetailss { get; set; } = null!;
         public virtual DbSet<OocSalesRefuseType> OocSalesRefuseTypes { get; set; } = null!;
         public virtual DbSet<OocSmokerContact> OocSmokerContacts { get; set; } = null!;
         public virtual DbSet<OocSmokerContactBak> OocSmokerContactBaks { get; set; } = null!;
@@ -450,6 +461,7 @@ namespace ABFLERPWEBAPI.Models
         public virtual DbSet<SetProductPricePreviouse> SetProductPricePreviouses { get; set; } = null!;
         public virtual DbSet<SetProductType> SetProductTypes { get; set; } = null!;
         public virtual DbSet<SetProductWiseIncentive> SetProductWiseIncentives { get; set; } = null!;
+        public virtual DbSet<SetProductPromotionPolicy> SetProductPromotionPolicys { get; set; } = null!;
         public virtual DbSet<SetReUpdateOutletBcstatus> SetReUpdateOutletBcstatuses { get; set; } = null!;
         public virtual DbSet<SetRegion> SetRegions { get; set; } = null!;
         public virtual DbSet<SetReportView> SetReportViews { get; set; } = null!;
@@ -480,6 +492,16 @@ namespace ABFLERPWEBAPI.Models
         public virtual DbSet<SetVisitStatus> SetVisitStatuses { get; set; } = null!;
         public virtual DbSet<SrcsrNotification> SrcsrNotifications { get; set; } = null!;
         public virtual DbSet<Student> Students { get; set; } = null!;
+        public virtual DbSet<AndroidAppsGetProductIno> AndroidAppsGetProductInos { get; set; } = null!;
+        public virtual DbSet<AndroidSPGetProductPromotionByEmployementID> AndroidSPGetProductPromotionByEmployementIDs { get; set; } = null!;
+        public virtual DbSet<AndroidSPGetFreeSamplePromotionByEmployementID> AndroidSPGetFreeSamplePromotionByEmployementIDs { get; set; } = null!;
+        public virtual DbSet<AndroidAppsGetUserInfoByUserID> AndroidAppsGetUserInfoByUserIDs { get; set; } = null!;
+        public virtual DbSet<AndroidAppsGetMarketingStructureData> AndroidAppsGetMarketingStructureDatas { get; set; } = null!;
+        public virtual DbSet<AndroidAppsGetMarketingStructureDataForSR> AndroidAppsGetMarketingStructureDataForSRs { get; set; } = null!;
+        public virtual DbSet<AndroidSPGetSRWiseRoute> AndroidSPGetSRWiseRoutes { get; set; } = null!;
+        public virtual DbSet<AndroidMKTSPGETTourPlanReport> AndroidMKTSPGETTourPlanReports { get; set; } = null!;
+        public virtual DbSet<AndroidMKTSPGETOutletVisitReport> AndroidMKTSPGETOutletVisitReports { get; set; } = null!;
+        public virtual DbSet<AndroidAppsGetOutletDetailsData> AndroidAppsGetOutletDetailsDatas { get; set; } = null!;
         public virtual DbSet<SystemDmsDmreceivedItemFromFactory> SystemDmsDmreceivedItemFromFactories { get; set; } = null!;
         public virtual DbSet<SystemDmsDmrecevedFromFactory> SystemDmsDmrecevedFromFactories { get; set; } = null!;
         public virtual DbSet<SystemDmsFactoryChallan> SystemDmsFactoryChallans { get; set; } = null!;
@@ -506,6 +528,8 @@ namespace ABFLERPWEBAPI.Models
         public virtual DbSet<VwscmNapkinDepoCurrentStock> VwscmNapkinDepoCurrentStocks { get; set; } = null!;
         public virtual DbSet<DMSSDWCDZeroBalanceReportStockSide> DMSSDWCDZeroBalanceReportStockSides { get; set; } = null!;
         public virtual DbSet<DMSSDWCDZeroBalanceReportExpenseSide> DMS_SDWCDZeroBalanceReportExpenseSides { get; set; } = null!;
+        public virtual DbSet<DMSMONTHLYADZeroBalanceReportStockSide> DMSMONTHLYADZeroBalanceReportStockSides { get; set; } = null!;
+        public virtual DbSet<DMSMONTHLYADZeroBalanceReportExpenseSide> DMSMONTHLYADZeroBalanceReportExpenseSides { get; set; } = null!;
         public virtual DbSet<DMSADWZeroBalanceReportStockSide> DMSADWZeroBalanceReportStockSides { get; set; } = null!;
         public virtual DbSet<DMSADWZeroBalanceReportExpenseSide> DMS_ADWZeroBalanceReportExpenseSides { get; set; } = null!;
 
@@ -513,7 +537,10 @@ namespace ABFLERPWEBAPI.Models
         public virtual DbSet<DMSSDWZeroBalanceReportExpenseSide> DMSSDWZeroBalanceReportExpenseSides { get; set; } = null!;
         public virtual DbSet<ACCSPGETTopSheetProductStockForDepotWithChildDepot> ACCSPGETTopSheetProductStockForDepotWithChildDepots { get; set; } = null!;
         public virtual DbSet<ACCSPGETTopSheetProductExpenseForDepotWithChildDepot> ACCSPGETTopSheetProductExpenseForDepotWithChildDepots { get; set; } = null!;
-        public virtual DbSet<DMSSPGetSDWCDZeroBalanceSalesReportByDepoAndDate> DMSSPGetSDWCDZeroBalanceSalesReportByDepoAndDates { get; set; } = null!; 
+        public virtual DbSet<DMSSPGetSDWCDZeroBalanceSalesReportByDepoAndDate> DMSSPGetSDWCDZeroBalanceSalesReportByDepoAndDates { get; set; } = null!;
+        public virtual DbSet<DMSSPGetSDWCDZeroBalanceExpenseReportByDepoAndDate> DMSSPGetSDWCDZeroBalanceExpenseReportByDepoAndDates { get; set; } = null!;
+
+        public virtual DbSet<DMSSPGetSDWCDZeroBalanceMiscellaneousIncomeReportByDepoAndDate> DMSSPGetSDWCDZeroBalanceMiscellaneousIncomeReportByDepoAndDates { get; set; } = null!;
 
         public virtual DbSet<ACCGETDateWiseAreaZeroBalanceReportStockPart> ACCGETDateWiseAreaZeroBalanceReportStockParts { get; set; } = null!;
         public virtual DbSet<ACCGETDateWiseAreaZeroBalanceReportExpensePart> ACCSPGETAreaWiseZeroBlanceExpenseParts { get; set; } = null!;
@@ -523,11 +550,30 @@ namespace ABFLERPWEBAPI.Models
 
         public virtual DbSet<AccZeroBalanceReportItem> AccZeroBalanceReportItems { get; set; } = null!;
 
+        // Scalar-returning function mapped to stored procedure
+        [DbFunction("GetOrderPK", "dbo")]
+        public long GetOrderPK()
+        {
+            throw new NotSupportedException();
+        }
+
+        ///public long GetOrderPK() => throw new NotSupportedException();
+
+
+        [DbFunction("GetOrderDetailPK", "dbo")]
+        public long GetOrderDetailPK()
+        {
+            throw new NotSupportedException();
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=123.200.7.37;Database=AkijSCMSDB;User=Sa; Password=ABlock***###;Trusted_Connection=false;");
+                optionsBuilder.UseSqlServer("Server=123.200.7.37;Database=AkijSCMSDB;User=Sa; Password=ABlock***###;Trusted_Connection=false;", sqloptions =>
+                {
+                    sqloptions.CommandTimeout(120);
+                });
             }
         }
 
@@ -4481,6 +4527,54 @@ namespace ABFLERPWEBAPI.Models
                     .HasColumnName("TP");
             });
 
+            modelBuilder.Entity<DMSSalesTargetWiseTotalMemo>(entity =>
+            {
+                entity.HasKey(e => e.ID)
+                    .HasName("PK_DMS_SalesTargetWiseTotalMemo");
+
+                entity.ToTable("DMS_SalesTargetWiseTotalMemo");
+
+                entity.Property(e => e.OrderID).HasColumnName("OrderID");
+
+                entity.Property(e => e.STTID).HasColumnName("STTID");
+
+                entity.Property(e => e.LastUpdate)
+                   .HasColumnType("datetime")
+                   .HasDefaultValueSql("(getdate())");
+            });
+            modelBuilder.Entity<DMSSalesTargetWiseTotalMemoPoint>(entity =>
+            {
+                entity.HasKey(e => e.ID)
+                    .HasName("PK_DMS_SalesTargetWiseTotalMemoPoint");
+
+                entity.ToTable("DMS_SalesTargetWiseTotalMemoPoint");
+
+                entity.Property(e => e.OrderID).HasColumnName("OrderID");
+
+                entity.Property(e => e.STTID).HasColumnName("STTID");
+
+                entity.Property(e => e.LastUpdate)
+                   .HasColumnType("datetime")
+                   .HasDefaultValueSql("(getdate())");
+            });
+
+            modelBuilder.Entity<DMSSalesTargetWiseTotalMemoDealer>(entity =>
+            {
+                entity.HasKey(e => e.ID)
+                    .HasName("PK_DMS_SalesTargetWiseTotalMemoDealer");
+
+                entity.ToTable("DMS_SalesTargetWiseTotalMemoDealer");
+
+                entity.Property(e => e.OrderID).HasColumnName("OrderID");
+
+                entity.Property(e => e.STTID).HasColumnName("STTID");
+
+                entity.Property(e => e.LastUpdate)
+                   .HasColumnType("datetime")
+                   .HasDefaultValueSql("(getdate())");
+            });
+
+
             modelBuilder.Entity<DmsDepoToDepoChallan>(entity =>
             {
                 entity.HasKey(e => e.ChallanId)
@@ -7964,6 +8058,22 @@ namespace ABFLERPWEBAPI.Models
 
                 entity.Property(e => e.TerritoryId).HasColumnName("TerritoryID");
             });
+
+            modelBuilder.Entity<DmsOutletWiseIncentive>(entity =>
+            {
+                entity.ToTable("DMS_OutletWiseIncentive");
+
+                entity.Property(e => e.ID)
+                    .ValueGeneratedNever()
+                    .HasColumnName("ID");
+
+                entity.Property(e => e.OutletID).HasColumnName("OutletID");
+
+                entity.Property(e => e.ProductID).HasColumnName("ProductID");
+
+                entity.Property(e => e.VisitFrequencyID).HasColumnName("VisitFrequencyID");
+            });
+
 
             modelBuilder.Entity<DmsTargetPlan>(entity =>
             {
@@ -11609,6 +11719,96 @@ namespace ABFLERPWEBAPI.Models
                 entity.Property(e => e.TplanItemId).HasColumnName("TPlanItemID");
             });
 
+            modelBuilder.Entity<MKTTourPlan>(entity =>
+            {
+                entity.ToTable("MKTTourPlan");
+
+                entity.Property(e => e.ID)
+                    .ValueGeneratedNever()
+                    .HasColumnName("ID");
+
+                entity.Property(e => e.EmploymentID).HasColumnName("EmploymentID");
+
+                entity.Property(e => e.LastUpdate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.OutletID).HasColumnName("OutletID");
+
+                entity.Property(e => e.Date).HasColumnType("date");
+ 
+            });
+
+            modelBuilder.Entity<SetOutletVisitParameter>(entity =>
+            {
+                entity.ToTable("SET_OutletVisitParameter");
+                entity.Property(e => e.ID)
+                    .ValueGeneratedNever()
+                    .HasColumnName("ID");
+                entity.Property(e => e.ParameterCode).HasColumnName("ParameterCode");
+                entity.Property(e => e.Lastupdate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+                entity.Property(e => e.ParameterName).HasColumnName("ParameterName");
+            });
+            modelBuilder.Entity<SetVehicleType>(entity =>
+            {
+                entity.ToTable("SET_VehicleType");
+                entity.Property(e => e.ID)
+                    .ValueGeneratedNever()
+                    .HasColumnName("ID");
+                entity.Property(e => e.VehicleType).HasColumnName("VehicleType");
+                entity.Property(e => e.LastUpdate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+            });
+
+            modelBuilder.Entity<SetVisitFrequency>(entity =>
+            {
+                entity.ToTable("SET_VisitFrequency");
+                entity.Property(e => e.ID)
+                    .ValueGeneratedNever()
+                    .HasColumnName("ID");
+                entity.Property(e => e.VFrequency).HasColumnName("VFrequency");
+                entity.Property(e => e.LastUpdate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+            });
+
+            modelBuilder.Entity<MKTOutletVisit>(entity =>
+            {
+                entity.ToTable("MKTOutletVisit");
+                entity.Property(e => e.ID)
+                    .ValueGeneratedNever()
+                    .HasColumnName("ID");
+                entity.Property(e => e.TourPlanID).HasColumnName("TourPlanID");
+                entity.Property(e => e.RouteID).HasColumnName("RouteID");
+                entity.Property(e => e.ClusterID).HasColumnName("ClusterID");
+                entity.Property(e => e.OutletID).HasColumnName("OutletID");
+                entity.Property(e => e.OutletName).HasColumnName("OutletName");
+                entity.Property(e => e.Latitude)
+                    .HasColumnType("decimal(18,7)");
+                entity.Property(e => e.Longitude)
+                    .HasColumnType("decimal(18,7)");
+                entity.Property(e => e.LastUpdate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+            });
+
+            modelBuilder.Entity<MKTOutletVisitDetails>(entity =>
+            {
+                entity.ToTable("MKTOutletVisitDetails");
+                entity.Property(e => e.ID)
+                    .ValueGeneratedNever()
+                    .HasColumnName("ID");
+                entity.Property(e => e.OVID).HasColumnName("OVID");
+                entity.Property(e => e.ParameterID).HasColumnName("ParameterID");
+                entity.Property(e => e.VerifyStatus).HasColumnName("VerifyStatus");
+                entity.Property(e => e.LastUpdate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+            });
+
             modelBuilder.Entity<OocOutletVisit>(entity =>
             {
                 entity.ToTable("OOC_OutletVisit");
@@ -13449,6 +13649,10 @@ namespace ABFLERPWEBAPI.Models
                 entity.Property(e => e.UnionId).HasColumnName("UnionID");
 
                 entity.Property(e => e.VillageName).HasMaxLength(50);
+                entity.Property(e => e.Latitude)
+                    .HasColumnType("decimal(18,7)");
+                entity.Property(e => e.Longitude)
+                    .HasColumnType("decimal(18,7)");
 
                 entity.HasOne(d => d.Cluster)
                     .WithMany(p => p.SetOutlets)
@@ -13775,12 +13979,44 @@ namespace ABFLERPWEBAPI.Models
                 entity.Property(e => e.ProductId).HasColumnName("ProductID");
 
                 entity.Property(e => e.StartDate).HasColumnType("datetime");
+            });
 
-                entity.HasOne(d => d.Product)
-                    .WithMany(p => p.SetProductWiseIncentives)
-                    .HasForeignKey(d => d.ProductId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SET_ProductWiseIncentive_SET_ProductWiseIncentive");
+            modelBuilder.Entity<SetProductPromotionPolicy>(entity =>
+            {
+                entity.HasKey(e => e.ID);
+
+                entity.ToTable("SET_ProductPromotionPolicy");
+
+                entity.Property(e => e.ID)
+                    .ValueGeneratedNever()
+                    .HasColumnName("ID");
+
+                entity.Property(e => e.EndDate).HasColumnType("datetime");
+
+                entity.Property(e => e.LastUpdate).HasColumnType("datetime");
+
+                entity.Property(e => e.ProductID).HasColumnName("ProductID");
+
+                entity.Property(e => e.StartDate).HasColumnType("datetime");
+            });
+
+            modelBuilder.Entity<SetFreeSampleProgrammePolicy>(entity =>
+            {
+                entity.HasKey(e => e.ID);
+
+                entity.ToTable("SET_FreeSampleProgrammePolicy");
+
+                entity.Property(e => e.ID)
+                    .ValueGeneratedNever()
+                    .HasColumnName("ID");
+
+                entity.Property(e => e.EndDate).HasColumnType("datetime");
+
+                entity.Property(e => e.LastUpdate).HasColumnType("datetime");
+
+                entity.Property(e => e.ProductID).HasColumnName("ProductID");
+
+                entity.Property(e => e.StartDate).HasColumnType("datetime");
             });
 
             modelBuilder.Entity<SetReUpdateOutletBcstatus>(entity =>
@@ -14919,6 +15155,61 @@ namespace ABFLERPWEBAPI.Models
             });
 
 
+            modelBuilder.Entity<DMSMONTHLYADZeroBalanceReportStockSide>(entity =>
+            {
+                entity.ToTable("DMSMONTHLYADZeroBalanceReportStockSide");
+
+                entity.Property(e => e.ID)
+                    .ValueGeneratedNever()
+                    .HasColumnName("ID");
+
+                entity.Property(e => e.Date).HasColumnName("Date");
+
+                entity.Property(e => e.AreaID).HasColumnName("AreaID");
+                entity.Property(e => e.ProductID).HasColumnType("ProductID");
+                entity.Property(e => e.ProductName).HasColumnType("ProductName");
+                entity.Property(e => e.Sticks).HasColumnType("Sticks");
+                entity.Property(e => e.TP).HasColumnType("TP");
+                entity.Property(e => e.ZBRIID).HasColumnName("ZBRIID");
+                entity.Property(e => e.TranType).HasColumnType("TranType");
+                entity.Property(e => e.SubTranType).HasColumnType("SubTranType");
+                entity.Property(e => e.Total).HasColumnType("Total");
+                entity.Property(e => e.TotalAmount).HasColumnType("TotalAmount");
+                entity.Property(e => e.Remarks).HasColumnType("Remarks");
+                entity.Property(e => e.IsActive).HasColumnType("IsAcive");
+                entity.Property(e => e.LastUpdate).HasColumnType("datetime");
+                entity.Property(e => e.Comments).HasColumnType("Comments");
+                entity.Property(e => e.Month).HasColumnType("Month");
+                entity.Property(e => e.Year).HasColumnType("Year");
+            });
+
+            modelBuilder.Entity<DMSMONTHLYADZeroBalanceReportExpenseSide>(entity =>
+            {
+                entity.ToTable("DMSMONTHLYADZeroBalanceReportExpenseSide");
+
+                entity.Property(e => e.ID)
+                    .ValueGeneratedNever()
+                    .HasColumnName("ID");
+
+                entity.Property(e => e.Date).HasColumnName("Date");
+                entity.Property(e => e.AreaID).HasColumnName("AreaID");
+                entity.Property(e => e.ProductID).HasColumnType("ProductID");
+                entity.Property(e => e.ProductName).HasColumnType("ProductName");
+                entity.Property(e => e.Sticks).HasColumnType("Sticks");
+                entity.Property(e => e.TP).HasColumnType("TP");
+                entity.Property(e => e.ZBRIID).HasColumnName("ZBRIID");
+                entity.Property(e => e.TranType).HasColumnType("TranType");
+                entity.Property(e => e.SubTranType).HasColumnType("SubTranType");
+                entity.Property(e => e.Total).HasColumnType("Total");
+                entity.Property(e => e.Remarks).HasColumnType("Remarks");
+                entity.Property(e => e.IsActive).HasColumnType("IsAcive");
+                entity.Property(e => e.LastUpdate).HasColumnType("datetime");
+                entity.Property(e => e.Comments).HasColumnType("Comments");
+                entity.Property(e => e.Month).HasColumnType("Month");
+                entity.Property(e => e.Year).HasColumnType("Year");
+            });
+
+
             modelBuilder.Entity<DMSSDWZeroBalanceReportStockSide>(entity =>
             {
                 entity.ToTable("DMSSDWZeroBalanceReportStockSide");
@@ -15013,6 +15304,32 @@ namespace ABFLERPWEBAPI.Models
                 entity.Property(e => e.Remarks).HasColumnType("Remarks");
                 entity.Property(e => e.IsActive).HasColumnType("IsAcive");
                 entity.Property(e => e.LastUpdate).HasColumnType("datetime");
+            });
+
+            modelBuilder.Entity<DmsRouteWiseSalesTargetInc>(entity =>
+            {
+                entity.ToTable("DMS_RouteWiseSalesTargetInc");
+
+                entity.Property(e => e.ID)
+                    .ValueGeneratedNever()
+                    .HasColumnName("ID");
+
+                entity.Property(e => e.STTID).HasColumnName("STTID");
+                entity.Property(e => e.STGID).HasColumnName("STGID");
+                entity.Property(e => e.SRID).HasColumnType("SRID");
+                entity.Property(e => e.RouteID).HasColumnType("RouteID");
+                entity.Property(e => e.TotalSales).HasColumnType("TotalSales");
+                entity.Property(e => e.AverageSales).HasColumnType("AverageSales");
+                entity.Property(e => e.TotalMemo).HasColumnName("TotalMemo");
+                entity.Property(e => e.AverageMemo).HasColumnType("AverageMemo");
+                entity.Property(e => e.SalesTarget).HasColumnType("SalesTarget");
+                entity.Property(e => e.MemoTarget).HasColumnType("MemoTarget");
+                entity.Property(e => e.Month).HasColumnType("Month");
+                entity.Property(e => e.Year).HasColumnType("Year");
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
+                entity.Property(e => e.LastUpdate).HasColumnType("datetime");
+                entity.Property(e => e.Category).HasColumnType("Category");
+                entity.Property(e => e.STPID).HasColumnType("STPID");
             });
 
             modelBuilder.Entity<VwcurrentDateDistinctGpstrackingPresentEmployee>(entity =>
@@ -15345,6 +15662,20 @@ namespace ABFLERPWEBAPI.Models
                     .HasColumnName("TP");
             });
 
+            // Mapping scalar SPs to functions
+            //modelBuilder.HasDbFunction(typeof(AkijSCMSDBContext).GetMethod(nameof(GetOrderPK))!)
+            //    .HasName("GetOrderPK")
+            //    .HasSchema("dbo");
+
+            modelBuilder
+                .HasDbFunction(() => GetOrderPK())
+                .HasName("GetOrderPK")
+                .HasSchema("dbo");
+
+            modelBuilder.HasDbFunction(typeof(AkijSCMSDBContext).GetMethod(nameof(GetOrderDetailPK))!)
+                .HasName("GetOrderDetailPK") 
+                .HasSchema("dbo");
+
             modelBuilder.HasSequence("BanKPK").StartsAt(104);
 
             modelBuilder.HasSequence("OrderDetailPK").StartsAt(9032582);
@@ -15354,6 +15685,10 @@ namespace ABFLERPWEBAPI.Models
             modelBuilder.HasSequence("OrderPK").StartsAt(8114188);
 
             modelBuilder.HasSequence("OrderPointPK").StartsAt(646600);
+
+            modelBuilder.HasSequence("IncomeExpenseMaster").StartsAt(1147855);
+
+            modelBuilder.HasSequence("IncomeExpenseDetails").StartsAt(1197517);
 
             OnModelCreatingPartial(modelBuilder);
         }
